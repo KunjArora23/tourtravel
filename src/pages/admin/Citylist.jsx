@@ -8,23 +8,37 @@ const CityList = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get("http://localhost:8000/api/v1/city/getAll");
-        setCities(res.data?.data || res.data?.cities || []);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-        setError("Failed to load cities. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCities = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("http://localhost:8000/api/v1/city/getAll");
+      setCities(res.data?.data || res.data?.cities || []);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      setError("Failed to load cities. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCities();
   }, []);
+
+  const handleDelete = async (e, cityId) => {
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to delete this city and all its tours?")) return;
+
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/admin/delete-city/${cityId}`,{withCredentials: true});
+      alert("City deleted successfully");
+      fetchCities(); // Refresh city list
+    } catch (error) {
+      console.error("Error deleting city:", error);
+      alert("Failed to delete city");
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -56,17 +70,24 @@ const CityList = () => {
             />
           </svg>
           <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white">No cities found</h3>
-          <p className="mt-1 text-gray-500 dark:text-gray-400">
-            Get started by adding a new city.
-          </p>
+          <p className="mt-1 text-gray-500 dark:text-gray-400">Get started by adding a new city.</p>
         </div>
       ) : (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {cities.map((city) => (
             <div
               key={city._id}
-              className="relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
+              onClick={() => navigate(`/admin/city/${city._id}/tours`)}
+              className="cursor-pointer relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
             >
+              {/* Delete Button */}
+              <button
+                onClick={(e) => handleDelete(e, city._id)}
+                className="absolute top-2 right-2 text-white bg-red-500 hover:bg-red-600 rounded-full px-2 py-1 text-xs shadow-sm z-10"
+              >
+                🗑️
+              </button>
+
               <div className="h-48 w-full overflow-hidden">
                 <img
                   src={city.image}
@@ -90,7 +111,10 @@ const CityList = () => {
                   </span>
                   <button
                     className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                    onClick={() => navigate(`/admin/addtour/${city._id}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/admin/addtour/${city._id}`);
+                    }}
                   >
                     Add Tour
                   </button>

@@ -105,6 +105,7 @@ export const getTourById = async (req, res) => {
 export const getToursByCityId = async (req, res) => {
   try {
     const { cityId } = req.params;
+    console.log("Fetching tours for city ID:", cityId);
 
     const tours = await Tour.find({ cityId });
 

@@ -26,9 +26,9 @@ adminRouter.route("/createtour").post(
     createTour
 );
 console.log("in admin.routes.js after createTour")
-adminRouter.route('/deletecity/:id').delete(deleteCity)
-adminRouter.route('/deletetour/:id').delete(deleteTour)
-adminRouter.route('/gettours/:id').get(getToursByCityId)
+adminRouter.route('/delete-city/:id').delete(adminAuth,deleteCity)
+adminRouter.route('/delete-tour/:id').delete(adminAuth,deleteTour)
+adminRouter.route('/get-tours/city/:id').get(adminAuth,getToursByCityId)
 
 
 export { adminRouter };

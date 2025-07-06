@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const TourDetailPage = () => {
+const TourDetailUser = () => {
   const { id } = useParams();
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,9 @@ const TourDetailPage = () => {
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8000/api/v1/tour/${id}`);
+        const { data } = await axios.get(`http://localhost:8000/api/v1/tour/${id}`,{
+          withCredentials: true, // Include credentials for session management
+        });
         setTour(data.tour);
       } catch (error) {
         console.error("Failed to fetch tour:", error);
@@ -77,4 +79,4 @@ const TourDetailPage = () => {
   );
 };
 
-export default TourDetailPage;
+export default TourDetailUser;
