@@ -31,7 +31,7 @@ const CityList = () => {
     if (!window.confirm("Are you sure you want to delete this city and all its tours?")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/api/v1/admin/delete-city/${cityId}`,{withCredentials: true});
+      await axios.delete(`http://localhost:8000/api/v1/admin/delete-city/${cityId}`, { withCredentials: true });
       alert("City deleted successfully");
       fetchCities(); // Refresh city list
     } catch (error) {
@@ -39,6 +39,7 @@ const CityList = () => {
       alert("Failed to delete city");
     }
   };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -117,6 +118,16 @@ const CityList = () => {
                     }}
                   >
                     Add Tour
+                  </button>
+                  {/* Edit Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/admin/editcity/${city._id}`);
+                    }}
+                    className="absolute top-2 left-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-full px-2 py-1 text-xs shadow-sm z-10"
+                  >
+                    ✏️
                   </button>
                 </div>
               </div>

@@ -1,7 +1,7 @@
-// pages/TourDetailPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const TourDetailUser = () => {
   const { id } = useParams();
@@ -11,12 +11,14 @@ const TourDetailUser = () => {
   useEffect(() => {
     const fetchTour = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8000/api/v1/tour/${id}`,{
-          withCredentials: true, // Include credentials for session management
+        const { data } = await axios.get(`http://localhost:8000/api/v1/tour/${id}`, {
+          withCredentials: true,
         });
         setTour(data.tour);
+        toast.success("Tour fetched successfully");
       } catch (error) {
         console.error("Failed to fetch tour:", error);
+        toast.error("Failed to load tour");
       } finally {
         setLoading(false);
       }
@@ -42,33 +44,47 @@ const TourDetailUser = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 py-16 px-4 container mx-auto">
-      {/* Tour Header */}
-      <div className="text-center mb-12">
+    <div className="min-h-screen bg-white dark:bg-gray-900 pb-16">
+      {/* Tour Image */}
+      {tour.image && (
+        <div className="w-full h-[400px]">
+          <img
+            src={tour.image}
+            alt={tour.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/600x400?text=Tour+Image";
+            }}
+          />
+        </div>
+      )}
+
+      {/* Tour Info */}
+      <div className="container mx-auto px-4 py-12 text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
           {tour.title}
         </h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-1">
           Duration: {tour.duration}
         </p>
         <p className="text-md text-gray-600 dark:text-gray-400">
-          Destinations Covered: {tour.destinations.join(', ')}
+          Destinations: {tour.destinations.join(', ')}
         </p>
       </div>
 
       {/* Itinerary Section */}
-      <div>
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+      <div className="container mx-auto px-4">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
           Tour Itinerary
         </h2>
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-4xl mx-auto">
           {tour.itinerary?.map((item, idx) => (
             <div
               key={idx}
               className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
             >
-              <h3 className="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">
-                {item.day}: {item.title}
+              <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-2">
+                Day {item.day}: {item.title}
               </h3>
               <p className="text-gray-700 dark:text-gray-300">{item.description}</p>
             </div>

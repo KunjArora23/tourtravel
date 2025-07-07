@@ -18,6 +18,7 @@ const tourSchema = new mongoose.Schema({
     ref: "CityTour",
     required: true
   },
+  image: { type: String }, // Store the image URL or path
 }, { timestamps: true });
 
 export default mongoose.model("Tour", tourSchema);

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CityTourCard from './cityTourCard';
 import { set } from 'mongoose';
+import { toast } from 'react-toastify';
 
-const CityTourListPage = () => {
+const Cities = () => {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +15,7 @@ const CityTourListPage = () => {
         const { data } = await axios.get('http://localhost:8000/api/v1/city/getAll'); // Update API endpoint if needed
         setTours(data.data);
         console.log('Fetched tours:', data);
+        toast.success('Tours fetched successfully');
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch tours:', error);
@@ -58,4 +60,4 @@ const CityTourListPage = () => {
   );
 };
 
-export default CityTourListPage;
+export default Cities;

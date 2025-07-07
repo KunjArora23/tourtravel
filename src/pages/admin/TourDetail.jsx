@@ -23,48 +23,67 @@ const TourDetail = () => {
   }, [id]);
 
   if (loading)
-    return <p className="text-center text-gray-600 py-10 text-lg">Loading...</p>;
+    return <p className="text-center text-gray-600 dark:text-gray-300 py-10 text-lg">Loading...</p>;
 
   if (!tour)
-    return <p className="text-center text-red-600 py-10 text-lg">Tour not found</p>;
+    return <p className="text-center text-red-600 dark:text-red-400 py-10 text-lg">Tour not found</p>;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 bg-white shadow-lg rounded-xl">
-      <h1 className="text-3xl font-bold text-blue-700 mb-6">{tour.title}</h1>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white dark:bg-gray-900 rounded-xl shadow-lg transition-colors duration-300">
+      {/* Tour Image */}
+      {tour.image && (
+        <div className="mb-8 rounded-xl overflow-hidden shadow-md">
+          <img
+            src={tour.image}
+            alt={tour.title}
+            className="w-full h-72 object-cover rounded-xl"
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/600x400?text=Tour+Image";
+            }}
+          />
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-sm">
-        <div className="space-y-2">
-          <p><span className="font-semibold">Duration:</span> {tour.duration}</p>
-          <p><span className="font-semibold">Destinations:</span> {tour.destinations.join(", ")}</p>
-          <p><span className="font-semibold">City ID:</span> {tour.city}</p>
+      {/* Title */}
+      <h1 className="text-4xl font-bold text-blue-700 dark:text-blue-400 mb-6 text-center">
+        {tour.title}
+      </h1>
+
+      {/* Overview Grid */}
+      <div className="grid md:grid-cols-2 gap-8 mb-10 text-gray-800 dark:text-gray-200 text-sm">
+        <div className="space-y-3">
+          <p><span className="font-medium">⏱ Duration:</span> {tour.duration}</p>
+          <p><span className="font-medium">📍 Destinations:</span> {tour.destinations.join(", ")}</p>
+         
         </div>
 
-        <div className="space-y-2">
-          <p><span className="font-semibold">Created:</span> {new Date(tour.createdAt).toLocaleString()}</p>
-          <p><span className="font-semibold">Updated:</span> {new Date(tour.updatedAt).toLocaleString()}</p>
+        <div className="space-y-3">
+          <p><span className="font-medium">📅 Created:</span> {new Date(tour.createdAt).toLocaleString()}</p>
+          <p><span className="font-medium">🕒 Updated:</span> {new Date(tour.updatedAt).toLocaleString()}</p>
         </div>
       </div>
 
-      <hr className="my-6 border-gray-200" />
+      <hr className="border-gray-300 dark:border-gray-700 mb-8" />
 
+      {/* Itinerary */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Itinerary</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">📌 Itinerary</h2>
         {tour.itinerary?.length > 0 ? (
-          <ul className="space-y-4">
+          <ul className="space-y-5">
             {tour.itinerary.map((item, index) => (
               <li
                 key={index}
-                className="border border-gray-200 rounded-lg p-4 bg-gray-50 shadow-sm"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800 shadow-sm"
               >
-                <p className="text-blue-600 font-semibold mb-1">
+                <p className="text-blue-600 dark:text-blue-400 font-semibold mb-1">
                   Day {item.day}: {item.title}
                 </p>
-                <p className="text-gray-600 text-sm">{item.description}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">{item.description}</p>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500">No itinerary added yet.</p>
+          <p className="text-gray-500 dark:text-gray-400">No itinerary added yet.</p>
         )}
       </div>
     </div>

@@ -80,7 +80,7 @@ export const getCityWithTours = async (req, res) => {
 
     const city = await CityTour.findById(id).populate({
       path: "tours",
-      select: "title duration destinations", // only fetch required fields
+      select: "title duration destinations image", // only fetch required fields
     });
 
     if (!city) {
@@ -142,33 +142,77 @@ export const deleteCity = async (req, res) => {
   }
 };
 
+// controllers/cityController.js
 
 
-export const deleteTour = async (req, res) => {
+export const getCityById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Step 1: Find and delete the tour from DB
-    const tour = await Tour.findByIdAndDelete(id);
-    if (!tour) {
-      return res.status(404).json({ message: "Tour not found" });
-    }
+    const city = await CityTour.findById(id);
 
-    // Step 2: Delete tour image from Cloudinary (if exists)
-    if (tour.image) {
-      const publicId = tour.image.split('/').pop().split('.')[0];
-      await deleteMediaFromCloudinary(publicId);
+    if (!city) {
+      return res.status(404).json({ message: "City not found" });
     }
 
     return res.status(200).json({
-      message: "Tour deleted successfully",
-      deletedTour: tour,
+      message: "City fetched successfully",
+      city,
+    });
+  } catch (error) {
+    console.error("Error fetching city by ID:", error);
+    return res.status(500).json({
+      message: "Error fetching city",
+      error: error.message,
+    });
+  }
+};
+
+
+// Update City Controller
+export const updateCity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    // Find the existing city
+    const city = await CityTour.findById(id);
+    if (!city) {
+      return res.status(404).json({ message: "City not found" });
+    }
+
+    // If a new image file is provided, upload it and delete the old one
+    let newImageUrl = city.image; // default to existing image
+    if (req.file) {
+      // Upload new image to Cloudinary
+      const uploaded = await uploadMedia(req.file.path, "TourTravels");
+
+      // Delete old image from Cloudinary
+      if (city.image) {
+        const publicId = city.image.split('/').pop().split('.')[0];
+        await deleteMediaFromCloudinary(publicId);
+      }
+
+      newImageUrl = uploaded.secure_url;
+    }
+
+    // Update the city fields
+    city.title = title || city.title;
+    city.description = description || city.description;
+    city.image = newImageUrl;
+
+    // Save the updated city
+    const updatedCity = await city.save();
+
+    return res.status(200).json({
+      message: "City updated successfully",
+      city: updatedCity,
     });
 
   } catch (error) {
-    console.error("Error deleting tour:", error);
+    console.error("Error updating city:", error);
     return res.status(500).json({
-      message: "Error deleting tour",
+      message: "Internal server error while updating city",
       error: error.message,
     });
   }
