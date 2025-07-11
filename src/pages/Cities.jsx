@@ -15,7 +15,7 @@ const Cities = () => {
         const { data } = await axios.get('http://localhost:8000/api/v1/city/getAll'); // Update API endpoint if needed
         setTours(data.data);
         console.log('Fetched tours:', data);
-        toast.success('Tours fetched successfully');
+        // toast.success('Tours fetched successfully');
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch tours:', error);

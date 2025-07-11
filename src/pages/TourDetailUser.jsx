@@ -15,7 +15,7 @@ const TourDetailUser = () => {
           withCredentials: true,
         });
         setTour(data.tour);
-        toast.success("Tour fetched successfully");
+        // toast.success("Tour fetched successfully");
       } catch (error) {
         console.error("Failed to fetch tour:", error);
         toast.error("Failed to load tour");

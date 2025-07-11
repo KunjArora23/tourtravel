@@ -81,13 +81,13 @@ function App() {
           </AuthProvider>
        
       </Router>
-      {/* <DownloadPopup /> */}
+      <DownloadPopup />
 
       <FloatingCTA />
-      {/* <ChatbotWidget /> */}
+      <ChatbotWidget />
 
       {/* Uncomment the line below to enable WhatsApp button */}
-      {/* <WhatsAppButton /> */}
+      <WhatsAppButton />
       <WhatsAppButton />
       <ToastContainer position="bottom-right" autoClose={2000} pauseOnHover />
     </ThemeProvider>
