@@ -23,9 +23,17 @@ const CityTourCard = ({ tour }) => {
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           {tour.title}
         </h3>
-        <p className="text-gray-700 dark:text-gray-300 text-sm">
+        <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">
           {tour.description?.slice(0, 120)}...
         </p>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+            {tour.tours?.length || 0} tours available
+          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Click to explore
+          </span>
+        </div>
       </div>
     </div>
   );

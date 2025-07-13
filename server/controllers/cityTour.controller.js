@@ -54,7 +54,8 @@ export const createCity = async (req, res) => {
 
 export const getAllCities = async (req, res) => {
   try {
-    const cities = await CityTour.find({}, "_id title description image "); // exclude tours
+    const cities = await CityTour.find({}, "_id title description image tours order")
+      .sort({ order: 1, createdAt: -1 }); // Sort by order first, then by creation date
 
     res.status(200).json({
       success: true,
@@ -213,6 +214,81 @@ export const updateCity = async (req, res) => {
     console.error("Error updating city:", error);
     return res.status(500).json({
       message: "Internal server error while updating city",
+      error: error.message,
+    });
+  }
+};
+
+// Update city order
+export const updateCityOrder = async (req, res) => {
+  try {
+    const { cityId, newOrder } = req.body;
+    
+    if (!cityId || newOrder === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "City ID and new order are required"
+      });
+    }
+
+    const city = await CityTour.findById(cityId);
+    if (!city) {
+      return res.status(404).json({
+        success: false,
+        message: "City not found"
+      });
+    }
+
+    city.order = newOrder;
+    await city.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "City order updated successfully",
+      city: {
+        _id: city._id,
+        title: city.title,
+        order: city.order
+      }
+    });
+  } catch (error) {
+    console.error("Error updating city order:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating city order",
+      error: error.message,
+    });
+  }
+};
+
+// Reorder multiple cities at once
+export const reorderCities = async (req, res) => {
+  try {
+    const { cityOrders } = req.body; // Array of { cityId, order }
+    
+    if (!cityOrders || !Array.isArray(cityOrders)) {
+      return res.status(400).json({
+        success: false,
+        message: "City orders array is required"
+      });
+    }
+
+    // Update all cities with their new orders
+    const updatePromises = cityOrders.map(({ cityId, order }) => 
+      CityTour.findByIdAndUpdate(cityId, { order }, { new: true })
+    );
+
+    await Promise.all(updatePromises);
+
+    return res.status(200).json({
+      success: true,
+      message: "Cities reordered successfully"
+    });
+  } catch (error) {
+    console.error("Error reordering cities:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error reordering cities",
       error: error.message,
     });
   }

@@ -17,6 +17,7 @@ import { notFound } from './middleware/notFound.js';
 // import { seedPackages } from './utils/seedData.js';
 import { cityRouter } from './routes/city.routes.js';
 import { tourRouter } from './routes/tour.routes.js';
+import { reviewRouter } from './routes/review.routes.js';
 
 import { adminRouter } from './routes/admin.routes.js';
 
@@ -50,6 +51,7 @@ app.listen(PORT, () => {
 
 app.use("/api/v1/city", cityRouter)
 app.use("/api/v1/tour", tourRouter)
+app.use("/api/v1/review", reviewRouter)
 
 // admin apis
 

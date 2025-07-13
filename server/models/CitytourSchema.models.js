@@ -9,6 +9,7 @@ const cityTourSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Tour', // ✅ reference matches model name
   }],
-});
+  order: { type: Number, default: 0 }, // Custom ordering for admin panel
+}, { timestamps: true });
 
 export default mongoose.model('CityTour', cityTourSchema);

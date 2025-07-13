@@ -198,3 +198,159 @@ export const updateTour = async (req, res) => {
     });
   }
 };
+
+// Get featured tours for hero section
+export const getFeaturedTours = async (req, res) => {
+  try {
+    const featuredTours = await Tour.find({ featured: true })
+      .populate('city', 'name')
+      .sort({ order: 1, createdAt: -1 }) // Sort by order first, then by creation date
+      .limit(5); // Limit to 5 featured tours
+
+    return res.status(200).json({
+      success: true,
+      count: featuredTours.length,
+      tours: featuredTours,
+    });
+  } catch (error) {
+    console.error("Error fetching featured tours:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching featured tours",
+      error: error.message,
+    });
+  }
+};
+
+// Toggle featured status of a tour
+export const toggleFeaturedTour = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const tour = await Tour.findById(id);
+    if (!tour) {
+      return res.status(404).json({ 
+        success: false,
+        message: "Tour not found" 
+      });
+    }
+
+    // Toggle the featured status
+    tour.featured = !tour.featured;
+    await tour.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Tour ${tour.featured ? 'marked as featured' : 'removed from featured'}`,
+      tour: {
+        _id: tour._id,
+        title: tour.title,
+        featured: tour.featured
+      }
+    });
+  } catch (error) {
+    console.error("Error toggling featured tour:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating featured status",
+      error: error.message,
+    });
+  }
+};
+
+// Get all tours with featured status for admin management
+export const getAllToursWithFeatured = async (req, res) => {
+  try {
+    const tours = await Tour.find()
+      .populate('city', 'name')
+      .sort({ order: 1, createdAt: -1 }); // Sort by order first, then by creation date
+
+    return res.status(200).json({
+      success: true,
+      count: tours.length,
+      tours: tours,
+    });
+  } catch (error) {
+    console.error("Error fetching tours:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching tours",
+      error: error.message,
+    });
+  }
+};
+
+// Update tour order
+export const updateTourOrder = async (req, res) => {
+  try {
+    const { tourId, newOrder } = req.body;
+    
+    if (!tourId || newOrder === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Tour ID and new order are required"
+      });
+    }
+
+    const tour = await Tour.findById(tourId);
+    if (!tour) {
+      return res.status(404).json({
+        success: false,
+        message: "Tour not found"
+      });
+    }
+
+    tour.order = newOrder;
+    await tour.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Tour order updated successfully",
+      tour: {
+        _id: tour._id,
+        title: tour.title,
+        order: tour.order
+      }
+    });
+  } catch (error) {
+    console.error("Error updating tour order:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating tour order",
+      error: error.message,
+    });
+  }
+};
+
+// Reorder multiple tours at once
+export const reorderTours = async (req, res) => {
+  try {
+    const { tourOrders } = req.body; // Array of { tourId, order }
+    
+    if (!tourOrders || !Array.isArray(tourOrders)) {
+      return res.status(400).json({
+        success: false,
+        message: "Tour orders array is required"
+      });
+    }
+
+    // Update all tours with their new orders
+    const updatePromises = tourOrders.map(({ tourId, order }) => 
+      Tour.findByIdAndUpdate(tourId, { order }, { new: true })
+    );
+
+    await Promise.all(updatePromises);
+
+    return res.status(200).json({
+      success: true,
+      message: "Tours reordered successfully"
+    });
+  } catch (error) {
+    console.error("Error reordering tours:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error reordering tours",
+      error: error.message,
+    });
+  }
+};

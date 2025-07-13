@@ -19,7 +19,7 @@ import CityTourDetailPage from './pages/CityTourDetailpage.jsx';
 import TourDetailPage from './pages/TourDetailUser.jsx';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import DownloadPopup from './components/DownloadPopup.jsx';
-import { AuthProvider } from './contexts/authContext.jsx';
+import { AuthProvider } from './contexts/AuthContext.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import AdminDashboard from './pages/admin/AdminDashboarsd.jsx';
@@ -30,6 +30,8 @@ import CityTours from './pages/admin/CityTour.jsx';
 import TourDetailUser from './pages/TourDetailUser.jsx';
 import EditCity from './pages/admin/EditCity.jsx';
 import EditTour from './pages/admin/EditTour.jsx';
+import ReviewManagement from './pages/admin/ReviewManagement.jsx';
+import FeaturedTours from './pages/admin/FeaturedTours.jsx';
 import Cities from './pages/Cities.jsx';
 import { Scroll } from 'lucide-react';
 import ScrollToTop from './components/ScrollToTop.jsx';
@@ -69,8 +71,9 @@ function App() {
                     <Route path="/admin/city/:cityId/tours" element={<CityTours />} />
                     <Route path="/admin/tour/:id" element={<TourDetail />} />
                     <Route path="/admin/editcity/:id" element={<EditCity />} />
-
                     <Route path="/admin/edit-tour/:id" element={<EditTour />} />
+                    <Route path="/admin/reviews" element={<ReviewManagement />} />
+                    <Route path="/admin/featured-tours" element={<FeaturedTours />} />
 
                   </Routes>
                 </AnimatedPageWrapper>
@@ -81,10 +84,10 @@ function App() {
           </AuthProvider>
        
       </Router>
-      <DownloadPopup />
+      {/* <DownloadPopup /> */}
 
       <FloatingCTA />
-      <ChatbotWidget />
+      {/* <ChatbotWidget /> */}
 
       {/* Uncomment the line below to enable WhatsApp button */}
       <WhatsAppButton />

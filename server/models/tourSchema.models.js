@@ -19,6 +19,8 @@ const tourSchema = new mongoose.Schema({
     required: true
   },
   image: { type: String }, // Store the image URL or path
+  featured: { type: Boolean, default: false }, // Mark tours for hero section display
+  order: { type: Number, default: 0 }, // Custom ordering for admin panel
 }, { timestamps: true });
 
 export default mongoose.model("Tour", tourSchema);

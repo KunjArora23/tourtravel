@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Globe, Users } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Globe, Users, Calendar, ChevronDown } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,14 +8,46 @@ const Contact = () => {
     phone: '',
     subject: '',
     message: '',
-    inquiryType: 'general'
+    inquiryType: 'custom'
   });
+
+  const [tailorMadeData, setTailorMadeData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    countryCode: '+91',
+    country: '',
+    adults: 1,
+    children: 0,
+    startDate: '',
+    endDate: '',
+    destinations: [],
+    hotelCategory: '',
+    interests: '',
+    specialRequests: ''
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showTailorMadeForm, setShowTailorMadeForm] = useState(true);
+  const [isDestinationDropdownOpen, setIsDestinationDropdownOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // If inquiry type changes, show appropriate form
+    if (name === 'inquiryType') {
+      setShowTailorMadeForm(value === 'custom');
+    }
+  };
+
+  const handleTailorMadeChange = (e) => {
+    const { name, value } = e.target;
+    setTailorMadeData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -40,10 +72,64 @@ const Contact = () => {
         phone: '',
         subject: '',
         message: '',
-        inquiryType: 'general'
+        inquiryType: 'custom'
+      });
+      setTailorMadeData({
+        name: '',
+        email: '',
+        phone: '',
+        countryCode: '+91',
+        country: '',
+        adults: 1,
+        children: 0,
+        startDate: '',
+        endDate: '',
+        destinations: [],
+        hotelCategory: '',
+        interests: '',
+        specialRequests: ''
       });
     }, 3000);
   };
+
+  // Country codes for phone numbers
+  const countryCodes = [
+    '+1', '+44', '+91', '+61', '+86', '+81', '+49', '+33', '+39', '+34',
+    '+7', '+55', '+86', '+82', '+31', '+46', '+41', '+32', '+47', '+45',
+    '+358', '+46', '+47', '+45', '+358', '+46', '+47', '+45', '+358', '+46'
+  ];
+
+  // Countries in alphabetical order
+  const countries = [
+    'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria',
+    'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
+    'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon',
+    'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica',
+    'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Democratic Republic of the Congo', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor',
+    'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia', 'Fiji', 'Finland',
+    'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea',
+    'Guinea-Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq',
+    'Ireland', 'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati',
+    'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania',
+    'Luxembourg', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius',
+    'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia',
+    'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway',
+    'Oman', 'Pakistan', 'Palau', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland',
+    'Portugal', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino',
+    'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands',
+    'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland',
+    'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey',
+    'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu',
+    'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe'
+  ];
+
+  // Indian States and Union Territories
+  const indianStates = [
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+    'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
+    'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+  ];
 
   const contactInfo = [
     {
@@ -91,7 +177,6 @@ const Contact = () => {
       phone: '+91 85279 21295',
       email: 'rpiipt@gmail.com'
     },
-
   ];
 
   const faqs = [
@@ -135,8 +220,6 @@ const Contact = () => {
         </div>
       </section>
 
-
-
       {/* Contact Form & Map */}
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -152,7 +235,337 @@ const Contact = () => {
                 </p>
               </div>
 
-              {!isSubmitted ? (
+              {/* Inquiry Type Selector */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Inquiry Type
+                </label>
+                <select
+                  name="inquiryType"
+                  value={formData.inquiryType}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                >
+                  <option value="custom">Custom Package</option>
+                  <option value="general">General Inquiry</option>
+                  <option value="booking">Tour Booking</option>
+                  <option value="support">Customer Support</option>
+                  <option value="partnership">Partnership</option>
+                </select>
+              </div>
+
+              {showTailorMadeForm ? (
+                // Tailor-Made Tour Form
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={tailorMadeData.name}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={tailorMadeData.email}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Country Code
+                      </label>
+                      <select
+                        name="countryCode"
+                        value={tailorMadeData.countryCode}
+                        onChange={handleTailorMadeChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        {countryCodes.map((code, index) => (
+                          <option key={index} value={code}>{code}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={tailorMadeData.phone}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        placeholder="Enter your phone number"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Country *
+                    </label>
+                    <select
+                      name="country"
+                      value={tailorMadeData.country}
+                      onChange={handleTailorMadeChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                    >
+                      <option value="">Select your country</option>
+                      {countries.map((country, index) => (
+                        <option key={index} value={country}>{country}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Number of Adults *
+                      </label>
+                      <select
+                        name="adults"
+                        value={tailorMadeData.adults}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                          <option key={num} value={num}>{num}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Number of Children
+                      </label>
+                      <select
+                        name="children"
+                        value={tailorMadeData.children}
+                        onChange={handleTailorMadeChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                          <option key={num} value={num}>{num}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Start Date *
+                      </label>
+                      <input
+                        type="date"
+                        name="startDate"
+                        value={tailorMadeData.startDate}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        End Date *
+                      </label>
+                      <input
+                        type="date"
+                        name="endDate"
+                        value={tailorMadeData.endDate}
+                        onChange={handleTailorMadeChange}
+                        required
+                        min={tailorMadeData.startDate}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Destinations (States/UTs in India) *
+                    </label>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setIsDestinationDropdownOpen(!isDestinationDropdownOpen)}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 flex items-center justify-between"
+                      >
+                        <span className={tailorMadeData.destinations.length > 0 ? 'text-gray-900 dark:text-white' : 'text-gray-500'}>
+                          {tailorMadeData.destinations.length > 0 
+                            ? `${tailorMadeData.destinations.length} destination(s) selected`
+                            : 'Select destinations'
+                          }
+                        </span>
+                        <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isDestinationDropdownOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      
+                      {isDestinationDropdownOpen && (
+                        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                          {indianStates.map((state, index) => (
+                            <div
+                              key={index}
+                              onClick={() => {
+                                if (tailorMadeData.destinations.includes(state)) {
+                                  setTailorMadeData(prev => ({
+                                    ...prev,
+                                    destinations: prev.destinations.filter(dest => dest !== state)
+                                  }));
+                                } else {
+                                  setTailorMadeData(prev => ({
+                                    ...prev,
+                                    destinations: [...prev.destinations, state]
+                                  }));
+                                }
+                              }}
+                              className={`px-4 py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
+                                tailorMadeData.destinations.includes(state) 
+                                  ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-l-blue-500' 
+                                  : ''
+                              }`}
+                            >
+                              <span className={`text-sm font-medium ${
+                                tailorMadeData.destinations.includes(state)
+                                  ? 'text-blue-700 dark:text-blue-300'
+                                  : 'text-gray-700 dark:text-gray-300'
+                              }`}>
+                                {state}
+                              </span>
+                              {tailorMadeData.destinations.includes(state) && (
+                                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {tailorMadeData.destinations.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Selected Destinations:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {tailorMadeData.destinations.map((destination, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800"
+                            >
+                              {destination}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setTailorMadeData(prev => ({
+                                    ...prev,
+                                    destinations: prev.destinations.filter(dest => dest !== destination)
+                                  }));
+                                }}
+                                className="ml-2 w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 transition-colors text-xs font-bold"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {tailorMadeData.destinations.length === 0 && (
+                      <p className="text-sm text-gray-500 mt-1">Please select at least one destination</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Hotel Category *
+                      </label>
+                      <select
+                        name="hotelCategory"
+                        value={tailorMadeData.hotelCategory}
+                        onChange={handleTailorMadeChange}
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        <option value="">Select</option>
+                        <option value="Budget">Budget</option>
+                        <option value="Standard">Standard (3*)</option>
+                        <option value="Deluxe">Deluxe (4*)</option>
+                        <option value="Luxury">Luxury (5*)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Interests
+                      </label>
+                      <input
+                        type="text"
+                        name="interests"
+                        value={tailorMadeData.interests}
+                        onChange={handleTailorMadeChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        placeholder="e.g. Culture, Wildlife, Adventure"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Special Requests
+                    </label>
+                    <textarea
+                      name="specialRequests"
+                      value={tailorMadeData.specialRequests}
+                      onChange={handleTailorMadeChange}
+                      rows="4"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      placeholder="Let us know any special requirements or requests..."
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-6 h-6" />
+                        <span>Send Custom Package Request</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              ) : (
+                // Regular Contact Form
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -266,8 +679,10 @@ const Contact = () => {
                     )}
                   </button>
                 </form>
-              ) : (
-                <div className="text-center py-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl">
+              )}
+
+              {isSubmitted && (
+                <div className="text-center py-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl mt-6">
                   <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center mx-auto mb-6">
                     <MessageCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                   </div>
@@ -280,8 +695,6 @@ const Contact = () => {
                 </div>
               )}
             </div>
-            {/* Contact Info Cards */}
-
 
             {/* Map & Office Info */}
             <div className="space-y-8">
