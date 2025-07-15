@@ -115,18 +115,18 @@ const ReviewSlideshow = () => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-white dark:bg-gray-900">
+      <section className="py-20 bg-rolex-softWhite">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-rolex-green mb-4">
               What Our Travelers Say
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-rolex-mutedChampagne max-w-3xl mx-auto">
               Real experiences from real travelers who have explored India with us
             </p>
           </div>
           <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rolex-gold"></div>
           </div>
         </div>
       </section>
@@ -139,18 +139,18 @@ const ReviewSlideshow = () => {
   if (reviews.length === 0) {
     console.log('No reviews found, showing fallback');
     return (
-      <section className="py-20 bg-white dark:bg-gray-900">
+      <section className="py-20 bg-rolex-softWhite">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-rolex-green mb-4">
               What Our Travelers Say
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-rolex-mutedChampagne max-w-3xl mx-auto">
               Real experiences from real travelers who have explored India with us
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500">Loading reviews...</p>
+            <p className="text-rolex-mutedChampagne">Loading reviews...</p>
           </div>
         </div>
       </section>
@@ -161,19 +161,19 @@ const ReviewSlideshow = () => {
   console.log('Current review:', currentReview);
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden">
+    <section className="py-20 bg-rolex-softWhite relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 opacity-50"></div>
+      <div className="absolute inset-0 bg-rolex-ivory opacity-50"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-rolex-green mb-4">
             What Our Travelers Say
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-rolex-mutedChampagne max-w-3xl mx-auto">
             Real experiences from real travelers who have explored India with us
           </p>
-          <div className="mt-4 text-sm text-gray-500">
+          <div className="mt-4 text-sm text-rolex-mutedChampagne">
             Debug: {reviews.length} reviews loaded, Current Index: {currentIndex}
           </div>
         </div>
@@ -186,7 +186,7 @@ const ReviewSlideshow = () => {
           onTouchEnd={onTouchEnd}
         >
           {/* Main Review Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-rolex-gold/30">
             <div className="relative h-80 overflow-hidden">
               <img
                 src={currentReview?.image}
@@ -196,16 +196,16 @@ const ReviewSlideshow = () => {
                   e.target.src = 'https://images.pexels.com/photos/3881104/pexels-photo-3881104.jpeg?auto=compress&cs=tinysrgb&w=800';
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-rolex-green/40 to-transparent"></div>
             </div>
             <div className="p-8">
               <div className="flex items-center space-x-1 mb-4">
                 {renderStars(currentReview?.rating || 5)}
               </div>
-              <blockquote className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6 italic">
+              <blockquote className="text-xl text-rolex-charcoal leading-relaxed mb-6 italic">
                 "{currentReview?.review || 'Amazing experience!'}"
               </blockquote>
-              <div className="font-semibold text-lg text-gray-900 dark:text-white">
+              <div className="font-semibold text-lg text-rolex-green">
                 {currentReview?.customerName || 'Customer'}
               </div>
             </div>
@@ -216,13 +216,13 @@ const ReviewSlideshow = () => {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 z-20"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-rolex-gold/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-rolex-green hover:bg-rolex-gold hover:text-white transition-all duration-300 z-20 border-2 border-rolex-gold"
               >
                 <ChevronLeft className="w-7 h-7" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 z-20"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-rolex-gold/90 backdrop-blur-sm rounded-full shadow-xl flex items-center justify-center text-rolex-green hover:bg-rolex-gold hover:text-white transition-all duration-300 z-20 border-2 border-rolex-gold"
               >
                 <ChevronRight className="w-7 h-7" />
               </button>
@@ -237,10 +237,10 @@ const ReviewSlideshow = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-4 h-4 rounded-full transition-all duration-300 ease-in-out ${
+                className={`w-4 h-4 rounded-full transition-all duration-300 ease-in-out border border-rolex-gold ${
                   index === currentIndex
-                    ? 'bg-blue-600 scale-150 shadow-lg'
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 hover:scale-110'
+                    ? 'bg-rolex-gold scale-150 shadow-lg'
+                    : 'bg-rolex-gold/40 hover:bg-rolex-gold/70 hover:scale-110'
                 }`}
               />
             ))}
@@ -248,7 +248,7 @@ const ReviewSlideshow = () => {
         )}
 
         {/* Review Counter */}
-        <div className="text-center mt-6 text-sm text-gray-500">
+        <div className="text-center mt-6 text-sm text-rolex-mutedChampagne">
           Review {currentIndex + 1} of {reviews.length}
         </div>
       </div>

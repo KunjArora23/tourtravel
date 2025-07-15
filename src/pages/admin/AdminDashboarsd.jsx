@@ -60,6 +60,17 @@ const AdminDashboard = () => {
               Add, edit, and manage customer reviews that appear on the home page.
             </p>
           </div>
+
+          {/* Manage Contact Submissions Card */}
+          <div
+            onClick={() => navigate("/admin/contact-submissions")}
+            className="cursor-pointer bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition"
+          >
+            <h2 className="text-xl font-semibold text-red-600 mb-2">Contact Submissions</h2>
+            <p className="text-gray-600">
+              View and manage all user contact form submissions and bookings.
+            </p>
+          </div>
         </div>
       </div>
     </div>

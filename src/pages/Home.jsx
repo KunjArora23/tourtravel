@@ -4,9 +4,8 @@ import { ArrowRight, Star, MapPin, Clock, Users, Award, Shield, Headphones } fro
 import axios from 'axios';
 import Hero from '../components/Hero';
 import TourCard from '../components/TourCard';
-import EnquiryForm from '../components/EnquiryForm';
+// import EnquiryForm from '../components/EnquiryForm';
 import ReviewSlideshow from '../components/ReviewSlideshow';
-import { mockPackages, packagesAPI } from '../utils/api';
 
 const Home = () => {
   const [featuredTours, setFeaturedTours] = useState([]);
@@ -111,57 +110,55 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-background text-text">
       {/* Hero Section */}
       <Hero />
 
       {/* Stats Section */}
-      <section className="py-16 bg-primary-600 text-white">
+      <section className="py-16 bg-rolex-champagne text-rolex-green">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold mb-2">
+              <div className="text-4xl md:text-5xl font-bold mb-2 text-rolex-gold">
                 {stats.customers.toLocaleString()}+
               </div>
-              <div className="text-primary-100">Happy Customers</div>
+              <div className="text-rolex-mutedChampagne">Happy Customers</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold mb-2">
+              <div className="text-4xl md:text-5xl font-bold mb-2 text-rolex-gold">
                 {stats.destinations}+
               </div>
-              <div className="text-primary-100">Destinations</div>
+              <div className="text-rolex-mutedChampagne">Destinations</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold mb-2">
+              <div className="text-4xl md:text-5xl font-bold mb-2 text-rolex-gold">
                 {stats.years}+
               </div>
-              <div className="text-primary-100">Years Experience</div>
+              <div className="text-rolex-mutedChampagne">Years Experience</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold mb-2">
+              <div className="text-4xl md:text-5xl font-bold mb-2 text-rolex-gold">
                 {stats.tours}+
               </div>
-              <div className="text-primary-100">Tour Packages</div>
+              <div className="text-rolex-mutedChampagne">Tour Packages</div>
             </div>
           </div>
         </div>
       </section>
 
-  
-
-
-
-
       {/* Reviews Slideshow Section */}
-      <ReviewSlideshow />
+      <section className="py-20 bg-background-dark text-text-dark">
+        <ReviewSlideshow />
+      </section>
+
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section className="py-20 bg-rolex-darkGreen text-rolex-champagne">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-rolex-gold mb-4">
               Why Choose Us
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-rolex-mutedChampagne max-w-3xl mx-auto">
               We're committed to providing exceptional travel experiences with unmatched service quality
             </p>
           </div>
@@ -169,13 +166,13 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="text-center group">
-                <div className="w-20 h-20 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors duration-300">
-                  <feature.icon className="w-10 h-10 text-primary-600 dark:text-primary-400 group-hover:text-white transition-colors duration-300" />
+                <div className="w-20 h-20 bg-rolex-gold/20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-rolex-gold transition-colors duration-300">
+                  <feature.icon className="w-10 h-10 text-rolex-gold group-hover:text-rolex-darkGreen transition-colors duration-300" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                <h3 className="text-xl font-semibold text-rolex-gold mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-rolex-champagne leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -185,7 +182,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+      <section className="py-20 bg-gradient-to-r from-rolex-gold via-rolex-champagne to-rolex-gold text-rolex-green">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
             Ready for Your Next Adventure?
@@ -197,13 +194,13 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => setIsEnquiryOpen(true)}
-              className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg transition-colors duration-300"
+              className="bg-rolex-green text-rolex-gold hover:bg-rolex-brassHover hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-colors duration-300 shadow-lg"
             >
               Plan My Trip
             </button>
             <Link
               to="/tours"
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-full font-semibold text-lg transition-colors duration-300"
+              className="bg-transparent border-2 border-rolex-green text-rolex-green hover:bg-rolex-green hover:text-rolex-gold px-8 py-4 rounded-full font-semibold text-lg transition-colors duration-300 shadow-lg"
             >
               Browse Tours
             </Link>
@@ -212,10 +209,7 @@ const Home = () => {
       </section>
 
       {/* Enquiry Form Modal */}
-      <EnquiryForm
-        isOpen={isEnquiryOpen}
-        onClose={() => setIsEnquiryOpen(false)}
-      />
+     
     </div>
   );
 };

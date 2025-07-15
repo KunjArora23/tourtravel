@@ -35,6 +35,7 @@ import FeaturedTours from './pages/admin/FeaturedTours.jsx';
 import Cities from './pages/Cities.jsx';
 import { Scroll } from 'lucide-react';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import ContactSubmissions from './pages/admin/ContactSubmissions.jsx';
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
                     <Route path="/admin/edit-tour/:id" element={<EditTour />} />
                     <Route path="/admin/reviews" element={<ReviewManagement />} />
                     <Route path="/admin/featured-tours" element={<FeaturedTours />} />
+                    <Route path="/admin/contact-submissions" element={<ContactSubmissions />} />
 
                   </Routes>
                 </AnimatedPageWrapper>

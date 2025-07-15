@@ -74,9 +74,9 @@ const Hero = () => {
 
   if (loading) {
     return (
-      <section className="relative h-screen overflow-hidden bg-gray-900">
+      <section className="relative h-screen overflow-hidden bg-background-dark">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rolex-gold"></div>
         </div>
       </section>
     );
@@ -97,7 +97,7 @@ const Hero = () => {
               className="w-full h-full bg-cover bg-center bg-no-repeat"
               style={{ backgroundImage: `url(${slide.image})` }}
             />
-            <div className="absolute inset-0 bg-black/40" />
+            {/* No overlay, keep image clear */}
           </div>
         ))}
       </div>
@@ -106,32 +106,21 @@ const Hero = () => {
       <div className="relative z-10 h-full flex items-center">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
-            <div className="space-y-6 animate-fade-in">
-              <h1 className="text-5xl md:text-7xl font-display font-bold text-white leading-tight">
+            <div className="space-y-6 animate-fade-in bg-black/30 p-8 rounded-2xl shadow-xl">
+              <h1 className="text-5xl md:text-7xl font-display font-bold text-rolex-gold leading-tight drop-shadow-lg">
                 {slides[currentSlide].title}
               </h1>
-              <p className="text-xl md:text-2xl text-gray-200 max-w-2xl leading-relaxed">
+              <p className="text-xl md:text-2xl text-rolex-champagne max-w-2xl leading-relaxed">
                 {slides[currentSlide].subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                {slides[currentSlide].isTour ? (
-                  <Link
-                    to={slides[currentSlide].link}
-                    className="group bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
-                  >
-                    <span>{slides[currentSlide].cta}</span>
-                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Link>
-                ) : (
-                  <Link
-                    to={slides[currentSlide].link}
-                    className="group bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
-                  >
-                    <span>{slides[currentSlide].cta}</span>
-                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Link>
-                )}
-               
+                <Link
+                  to={slides[currentSlide].link}
+                  className="group bg-rolex-gold hover:bg-rolex-brassHover text-rolex-green px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg border-2 border-rolex-gold"
+                >
+                  <span>{slides[currentSlide].cta}</span>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
               </div>
             </div>
           </div>
@@ -145,10 +134,10 @@ const Hero = () => {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 border border-rolex-gold ${
                 index === currentSlide 
-                  ? 'bg-white w-8' 
-                  : 'bg-white/50 hover:bg-white/75'
+                  ? 'bg-rolex-gold w-8' 
+                  : 'bg-rolex-gold/50 hover:bg-rolex-gold/75'
               }`}
             />
           ))}

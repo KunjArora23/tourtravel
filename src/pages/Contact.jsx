@@ -1,6 +1,27 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Globe, Users, Calendar, ChevronDown } from 'lucide-react';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const TIMEZONE_OFFSET = '+05:30';
+const SLOT_START = 7; // 7:00 AM
+const SLOT_END = 23.5; // 11:30 PM
+const SLOT_INTERVAL = 30; // minutes
+
+function generateTimeSlots() {
+  const slots = [];
+  for (let h = SLOT_START; h <= SLOT_END; h += 0.5) {
+    const hour = Math.floor(h);
+    const minute = h % 1 === 0 ? '00' : '30';
+    slots.push(`${hour.toString().padStart(2, '0')}:${minute}`);
+  }
+  return slots;
+}
+const TIME_SLOTS = generateTimeSlots();
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -33,6 +54,42 @@ const Contact = () => {
   const [showTailorMadeForm, setShowTailorMadeForm] = useState(true);
   const [isDestinationDropdownOpen, setIsDestinationDropdownOpen] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [meetingDate, setMeetingDate] = useState('');
+  const [meetingTime, setMeetingTime] = useState('');
+  const [slotError, setSlotError] = useState('');
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [userTimeZone, setUserTimeZone] = useState(dayjs.tz.guess());
+
+  // Fetch available slots when meetingDate changes (for non-custom forms)
+  React.useEffect(() => {
+    setUserTimeZone(dayjs.tz.guess());
+  }, []);
+
+  React.useEffect(() => {
+    if (!showTailorMadeForm && meetingDate) {
+      setSlotsLoading(true);
+      setAvailableSlots([]);
+      axios
+        .get(`http://localhost:8000/api/v1/contact/available-slots?date=${meetingDate}`)
+        .then(res => {
+          // Convert IST slots to user timezone for display
+          const slots = (res.data.slots || []).map(slot => {
+            const istDateTime = dayjs.tz(`${meetingDate}T${slot}:00`, 'Asia/Kolkata');
+            return {
+              ist: slot,
+              user: istDateTime.tz(userTimeZone).format('HH:mm'),
+              userLabel: istDateTime.tz(userTimeZone).format('hh:mm A z'),
+            };
+          });
+          setAvailableSlots(slots);
+        })
+        .catch(() => {
+          setAvailableSlots([]);
+        })
+        .finally(() => setSlotsLoading(false));
+    }
+  }, [meetingDate, showTailorMadeForm, userTimeZone]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,14 +116,19 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError('');
+    setSlotError('');
 
     try {
-      // Send only the relevant form data
-      const dataToSend = showTailorMadeForm ? { ...tailorMadeData } : { ...formData };
-      await axios.post('http://localhost:8000/api/v1/contact', dataToSend);
+      const dataToSend = showTailorMadeForm
+        ? { ...tailorMadeData, userTimeZone }
+        : { ...formData, meetingDate, meetingTime, userTimeZone };
+      const res = await axios.post('http://localhost:8000/api/v1/contact', dataToSend);
+      if (res.data && res.data.meetLink) {
+        // Optionally show Meet link to user
+      }
       setIsSubmitted(true);
       setIsSubmitting(false);
-      // Reset form after delay
+      setSlotError('');
       setTimeout(() => {
         setIsSubmitted(false);
         setFormData({
@@ -92,11 +154,17 @@ const Contact = () => {
           interests: '',
           specialRequests: ''
         });
+        setMeetingDate('');
+        setMeetingTime('');
       }, 3000);
     } catch (error) {
-      setSubmitError('Failed to send your enquiry. Please try again later.');
+      if (error.response && error.response.data && error.response.data.message) {
+        setSlotError(error.response.data.message);
+      } else {
+        setSubmitError('Failed to send your enquiry. Please try again later.');
+      }
       setIsSubmitting(false);
-      setTimeout(() => setSubmitError(''), 3000);
+      setTimeout(() => { setSubmitError(''); setSlotError(''); }, 3000);
     }
   };
 
@@ -653,6 +721,50 @@ const Contact = () => {
                       placeholder="Enter subject"
                     />
                   </div>
+
+                  {!showTailorMadeForm && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Preferred Meeting Date
+                        </label>
+                        <input
+                          type="date"
+                          name="meetingDate"
+                          value={meetingDate}
+                          onChange={e => setMeetingDate(e.target.value)}
+                          min={dayjs().add(1, 'day').format('YYYY-MM-DD')}
+                          required
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Preferred Time Slot (IST)
+                        </label>
+                        <select
+                          name="meetingTime"
+                          value={meetingTime}
+                          onChange={e => setMeetingTime(e.target.value)}
+                          required
+                          disabled={!meetingDate || slotsLoading || availableSlots.length === 0}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+                        >
+                          <option value="">{slotsLoading ? 'Loading slots...' : 'Select a time slot'}</option>
+                          {availableSlots.map(slot => (
+                            <option key={slot.ist} value={slot.ist}>{slot.userLabel} (IST: {slot.ist})</option>
+                          ))}
+                        </select>
+                        {slotsLoading && <div className="text-primary-600 text-sm mt-2">Loading available slots...</div>}
+                        {!slotsLoading && meetingDate && availableSlots.length === 0 && (
+                          <div className="text-red-500 text-sm mt-2 font-semibold">No slots available for this date.</div>
+                        )}
+                      </div>
+                      {slotError && (
+                        <div className="text-red-500 text-sm mt-2 font-semibold">{slotError}</div>
+                      )}
+                    </>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
