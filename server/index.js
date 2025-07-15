@@ -18,6 +18,7 @@ import { notFound } from './middleware/notFound.js';
 import { cityRouter } from './routes/city.routes.js';
 import { tourRouter } from './routes/tour.routes.js';
 import { reviewRouter } from './routes/review.routes.js';
+import { contactRouter } from './routes/contact.routes.js';
 
 import { adminRouter } from './routes/admin.routes.js';
 
@@ -30,7 +31,7 @@ const PORT = process.env.PORT || 8000;
 
 // Connect to database
 connectDB()
-console.log(process.env.MONGO_URI)
+
 
 // Middleware
 app.use(cookieParser());
@@ -52,6 +53,7 @@ app.listen(PORT, () => {
 app.use("/api/v1/city", cityRouter)
 app.use("/api/v1/tour", tourRouter)
 app.use("/api/v1/review", reviewRouter)
+app.use('/api/v1/contact', contactRouter);
 
 // admin apis
 

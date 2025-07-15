@@ -26,7 +26,7 @@ export default function DownloadPopup() {
             Download our short guide to stay safe, travel smart, and make the most of your trip.
           </p>
           <a
-            href="/india-tips.pdf"
+            href="/public/S & C Tours Essential India Travel Tips.pdf"
             download
             className="mt-2 inline-block bg-gray-800 text-white px-4 py-2 text-sm rounded hover:bg-gray-900 transition"
           >

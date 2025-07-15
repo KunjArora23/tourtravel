@@ -12,7 +12,7 @@ import AdminLogin from './pages/AdminLogin.jsx';
 import FloatingCTA from './components/FloatingCTA.jsx';
 
 import AnimatedPageWrapper from './components/AnimatedPageWrapper.jsx';
-import WhatsAppButton from './components/WhatsAppButton.jsx';
+import MultiContactButton from './components/MultiContact.jsx';
 import ChatbotWidget from './components/ChatbotWidget.jsx';
 import CityTourListPage from './pages/Cities.jsx';
 import CityTourDetailPage from './pages/CityTourDetailpage.jsx';
@@ -86,12 +86,8 @@ function App() {
       </Router>
       {/* <DownloadPopup /> */}
 
-      <FloatingCTA />
-      {/* <ChatbotWidget /> */}
-
-      {/* Uncomment the line below to enable WhatsApp button */}
-      <WhatsAppButton />
-      <WhatsAppButton />
+      <MultiContactButton />
+      <ChatbotWidget position="bottom-left" />
       <ToastContainer position="bottom-right" autoClose={2000} pauseOnHover />
     </ThemeProvider>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Globe, Users, Calendar, ChevronDown } from 'lucide-react';
+import axios from 'axios';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -31,6 +32,7 @@ const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showTailorMadeForm, setShowTailorMadeForm] = useState(true);
   const [isDestinationDropdownOpen, setIsDestinationDropdownOpen] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,40 +58,46 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError('');
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-
-    // Reset form after delay
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        inquiryType: 'custom'
-      });
-      setTailorMadeData({
-        name: '',
-        email: '',
-        phone: '',
-        countryCode: '+91',
-        country: '',
-        adults: 1,
-        children: 0,
-        startDate: '',
-        endDate: '',
-        destinations: [],
-        hotelCategory: '',
-        interests: '',
-        specialRequests: ''
-      });
-    }, 3000);
+    try {
+      // Send only the relevant form data
+      const dataToSend = showTailorMadeForm ? { ...tailorMadeData } : { ...formData };
+      await axios.post('http://localhost:8000/api/v1/contact', dataToSend);
+      setIsSubmitted(true);
+      setIsSubmitting(false);
+      // Reset form after delay
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+          inquiryType: 'custom'
+        });
+        setTailorMadeData({
+          name: '',
+          email: '',
+          phone: '',
+          countryCode: '+91',
+          country: '',
+          adults: 1,
+          children: 0,
+          startDate: '',
+          endDate: '',
+          destinations: [],
+          hotelCategory: '',
+          interests: '',
+          specialRequests: ''
+        });
+      }, 3000);
+    } catch (error) {
+      setSubmitError('Failed to send your enquiry. Please try again later.');
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitError(''), 3000);
+    }
   };
 
   // Country codes for phone numbers
@@ -691,6 +699,19 @@ const Contact = () => {
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 text-lg">
                     Thank you for contacting us. We'll get back to you within 24 hours.
+                  </p>
+                </div>
+              )}
+              {submitError && (
+                <div className="text-center py-12 bg-red-50 dark:bg-red-900/20 rounded-2xl mt-6">
+                  <div className="w-20 h-20 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    Submission Failed
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-lg">
+                    {submitError}
                   </p>
                 </div>
               )}
